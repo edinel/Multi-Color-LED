@@ -32,32 +32,25 @@ const boolean BLACK[] = {OFF, OFF, OFF};
 
 //An Array that stores the predefined colors (allows us to later randomly display a color)
 const boolean* COLORS[] = {RED, GREEN, BLUE, YELLOW, CYAN, MAGENTA, WHITE, BLACK};
+//OK so this is an array of arrays (of pointers?)
 
 void setup(){
   for(int i = 0; i < 3; i++){
-   pinMode(ledDigitalOne[i], OUTPUT);   //Set the three LED pins as outputs
+   pinMode(ledDigitalOne[i], OUTPUT);
+   setColorByName(ledDigitalOne, BLACK);   //Set the three LED pins as outputs
+
   }
 }
 
 void loop(){
-
-/* Example - 1 Set a color
-   Set the three LEDs to any predefined color
-*/
-   //setColor(ledDigitalOne, CYAN);    //Set the color of LED one
-
-/* Example - 2 Go through Random Colors
-  Set the LEDs to a random color
-*/
-   randomColor();
-
+  
+   setColorByName(ledDigitalOne, BLACK);
+   delay(500); 
+   SetRandomColor();
+    delay(500);
 }
 
-void randomColor(){
-  int rand = random(0, sizeof(COLORS) / 2);  //get a random number within the range of colors - / 2 becasuse we know that the array's made of consts
-  setColor(ledDigitalOne, COLORS[rand]);  //Set the color of led one to a random color
-  delay(1000);
-}
+
 
 /* Sets an led to any color
    led - a three element array defining the three color pins (led[0] = redPin, led[1] = greenPin, led[2] = bluePin)
@@ -67,11 +60,19 @@ void setColor(int* led, boolean* color){
  for(int i = 0; i < 3; i++){
    digitalWrite(led[i], color[i]);
  }
+ 
 }
-
 /* A version of setColor that allows for using const boolean colors
+*
 */
-void setColor(int* led, const boolean* color){
+void setColorByName(int* led, const boolean* color){
   boolean tempColor[] = {color[0], color[1], color[2]};
   setColor(led, tempColor);
+}
+
+
+void SetRandomColor(){
+//  int rand = random(0, sizeof(COLORS) / 2);   //sizeof(boolean));  //get a random number within the range of colors
+  int rand = random() % 7; 
+  setColorByName(ledDigitalOne, COLORS[rand]);  //Set the color of led one to a random color
 }
