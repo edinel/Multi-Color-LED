@@ -29,10 +29,17 @@ const boolean CYAN[] = {OFF, ON, ON};
 const boolean MAGENTA[] = {ON, OFF, ON}; 
 const boolean WHITE[] = {ON, ON, ON}; 
 const boolean BLACK[] = {OFF, OFF, OFF}; 
+const boolean FALSE = 0;
+const boolean TRUE = 1;
 
 //An Array that stores the predefined colors (allows us to later randomly display a color)
 const boolean* COLORS[] = {RED, GREEN, BLUE, YELLOW, CYAN, MAGENTA, WHITE, BLACK};
 //OK so this is an array of arrays (of pointers?)
+
+boolean isLit = FALSE;
+long previousMillis = 0;
+long interval = 50; 
+
 
 void setup(){
   for(int i = 0; i < 3; i++){
@@ -43,13 +50,24 @@ void setup(){
 }
 
 void loop(){
-  
-   setColorByName(ledDigitalOne, BLACK);
-   delay(500); 
-   SetRandomColor();
-    delay(500);
+   unsigned long currentMillis = millis();
+   if(currentMillis - previousMillis > interval) { // save the last time you blinked the LED 
+     previousMillis = currentMillis;
+     ChangeLEDState(); 
+   }
 }
 
+void ChangeLEDState(){
+  if (isLit == FALSE){
+    SetRandomColor();
+    isLit = TRUE; 
+  }
+  else
+  {
+    setColorByName (ledDigitalOne, BLACK);
+    isLit = FALSE; 
+  }
+}
 
 
 /* Sets an led to any color
@@ -62,6 +80,7 @@ void setColor(int* led, boolean* color){
  }
  
 }
+
 /* A version of setColor that allows for using const boolean colors
 *
 */
@@ -72,7 +91,7 @@ void setColorByName(int* led, const boolean* color){
 
 
 void SetRandomColor(){
-//  int rand = random(0, sizeof(COLORS) / 2);   //sizeof(boolean));  //get a random number within the range of colors
-  int rand = random() % 7; 
+//  int rand = random(0, sizeof(COLORS) / sizeof(boolean)); //get a random number within the range of colors
+  int rand = random() % 7; // There are 7 non-black colors in the array, after all.  
   setColorByName(ledDigitalOne, COLORS[rand]);  //Set the color of led one to a random color
 }
